@@ -13,14 +13,17 @@ functions:
 resources:
   Resources:
     ResourceMacro:
+      DependsOn:
+        - ResourceMacroLambdaFunction
+        - IamRoleLambdaExecution
       Type: AWS::CloudFormation::Macro
       Properties:
         Name: RMacro
         Description: Example macro
         FunctionName:
           Ref: ResourceMacroLambdaFunction
-        LogGroupName: ResourceMacroLogGroup
-        LogRoleARN:
-          Ref: IamRoleLambdaExecution
+        # LogGroupName: ResourceMacroLogGroup
+        # LogRoleARN:
+        #   Ref: IamRoleLambdaExecution
 
 
