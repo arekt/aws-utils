@@ -1,0 +1,42 @@
+Type: AWS::ApiGateway::Method
+Properties:
+  HttpMethod: GET
+  ResourceId:
+    Ref: AssetsResource
+  RestApiId:
+    Ref: ApiGatewayRestApi
+  AuthorizationType: NONE
+  RequestParameters:
+    method.request.path.item: true
+  Integration:
+    CacheKeyParameters:
+      - "method.request.path.item"
+    RequestParameters:
+      integration.request.path.item: "method.request.path.item"
+    IntegrationHttpMethod: GET
+    Type: AWS
+    Credentials:
+      Fn::GetAtt:
+        - APIGateWayRole
+        - Arn
+    Uri:
+      Fn::Join:
+        - ""
+        -
+          - "arn:aws:apigateway:"
+          - Ref: "AWS::Region"
+          - ":s3:path/"
+          - Ref: AssetsBucket
+          - "/assets/{item}"
+    PassthroughBehavior: WHEN_NO_MATCH
+    #ContentHandling: CONVERT_TO_BINARY
+    IntegrationResponses:
+      - StatusCode: 200
+        ResponseParameters:
+          method.response.header.Content-Type: integration.response.header.Content-Type
+          method.response.header.Content-Length: integration.response.header.Content-Length
+  MethodResponses:
+    - StatusCode: 200
+      ResponseParameters:
+        method.response.header.Content-Type: true
+        method.response.header.Content-Length: true
