@@ -19,7 +19,7 @@ module ResourceTransform
     base_name = resource["Type"]
     return yield(resource) unless base_name.present?
     file_name = "templates/#{base_name.underscore}.yaml.erb"
-    yield(File.read(file_name)) if File.exist?(file_name)
+    yield(YAML.load_file(file_name)) if File.exist?(file_name)
   end
 
   def transform(fragment)
